@@ -465,11 +465,6 @@ serve -s mecaflow-web/dist
 
 ---
 
-## 🎥 Demonstração
-
-> [!WARNING]
-> As telas serão capturadas após a implementação da interface. Hospede as imagens em um CDN ou no GitHub Pages para evitar links quebrados.
-
 ### 🌐 Aplicação Web
 
 | Tela | Captura de Tela |
@@ -564,32 +559,9 @@ npm run test
 
 ## 👥 Autores
 
-| 👤 Nome | :octocat: GitHub | 💼 LinkedIn | 📤 Gmail |
+| 👤 Nome | :octocat: GitHub | 💼 LinkedIn |
 |---------|-----------------|-------------|-----------|
-| Lucas José Lopes Ferreira | [GitHub](https://github.com/<seu-usuario>) | [LinkedIn](https://www.linkedin.com/in/<seu-perfil>) | [E-mail](mailto:<seu-email>@gmail.com) |
-
-> [!TIP]
-> 💡 Substitua os links acima pelos seus perfis antes da entrega.
-
----
-
-## 🤝 Contribuição
-
-1. Faça um `fork` do projeto.
-2. Crie uma branch para sua feature (`git checkout -b feature/minha-feature`).
-3. Faça o commit (`git commit -m 'feat: adiciona funcionalidade X'`). Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
-4. Faça o `push` para a branch (`git push origin feature/minha-feature`).
-5. Abra um **Pull Request (PR)**.
-
-> [!IMPORTANT]
-> 📝 **Regras:** consulte o [`CONTRIBUTING.md`](./CONTRIBUTING.md) para o guia de estilo e o processo de submissão de PRs.
-
----
-
-## 🙏 Agradecimentos
-
-* [**Engenharia de Software PUC Minas**](https://www.instagram.com/engsoftwarepucminas/) - Pelo apoio institucional e pela estrutura acadêmica.
-* [**Prof. Dr. João Paulo Aramuni**](https://github.com/joaopauloaramuni) - Pelos ensinamentos em Arquitetura de Software e Padrões de Projeto e pelo template que serviu de base para esta documentação.
+| Lucas José Lopes Ferreira | [GitHub](https://github.com/iTsLJ) | [LinkedIn](www.linkedin.com/in/lucas-ferreira10) 
 
 ---
 
