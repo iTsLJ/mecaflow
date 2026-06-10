@@ -61,9 +61,11 @@
   - [Como Gerar os Diagramas (PlantUML)](#-como-gerar-os-diagramas-plantuml)
 - [Deploy](#-deploy)
 - [Estrutura de Pastas](#-estrutura-de-pastas)
+- [Demonstração](#-demonstração)
 - [Testes](#-testes)
 - [Documentações utilizadas](#-documentações-utilizadas)
 - [Autores](#-autores)
+- [Contribuição](#-contribuição)
 - [Licença](#-licença)
 
 ---
@@ -260,7 +262,7 @@ Para adicionar: acesse a página de Environment Variables do projeto e clique em
 1. **Clone o repositório:**
 
 ```bash
-git clone https://github.com/<seu-usuario>/mecaflow.git
+git clone https://github.com/iTsLJ/mecaflow.git
 cd mecaflow
 ```
 
@@ -462,6 +464,11 @@ serve -s mecaflow-web/dist
 
 ---
 
+## 🎥 Demonstração
+
+> [!WARNING]
+> As telas serão capturadas após a implementação da interface. Hospede as imagens em um CDN ou no GitHub Pages para evitar links quebrados.
+
 ### 🌐 Aplicação Web
 
 | Tela | Captura de Tela |
@@ -556,9 +563,22 @@ npm run test
 
 ## 👥 Autores
 
-| 👤 Nome | :octocat: GitHub | 💼 LinkedIn 
+| 👤 Nome | :octocat: GitHub | 💼 LinkedIn | 📤 Gmail |
 |---------|-----------------|-------------|-----------|
-| Lucas José Lopes Ferreira | [GitHub](https://github.com/iTsLJ) | [LinkedIn](www.linkedin.com/in/lucas-ferreira10) 
+| Lucas José Lopes Ferreira | [GitHub](https://github.com/iTsLJ) | [LinkedIn](https://www.linkedin.com/in/lucas-ferreira10/) | [E-mail](mailto:lucasjlopesferreira@gmail.com) |
+
+---
+
+## 🤝 Contribuição
+
+1. Faça um `fork` do projeto.
+2. Crie uma branch para sua feature (`git checkout -b feature/minha-feature`).
+3. Faça o commit (`git commit -m 'feat: adiciona funcionalidade X'`). Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+4. Faça o `push` para a branch (`git push origin feature/minha-feature`).
+5. Abra um **Pull Request (PR)**.
+
+> [!IMPORTANT]
+> 📝 **Regras:** consulte o [`CONTRIBUTING.md`](./CONTRIBUTING.md) para o guia de estilo e o processo de submissão de PRs.
 
 ---
 
