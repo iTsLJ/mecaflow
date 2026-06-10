@@ -1,0 +1,33 @@
+@startuml implantacao
+title MecaFlow — Diagrama de Implantação (Docker / Cloud)
+skinparam shadowing false
+
+node "Dispositivo do Usuário" {
+  artifact "Navegador Web" as browser
+}
+
+cloud "Provedor Cloud" {
+  node "Vercel / Netlify" {
+    artifact "Build estático React (/dist)" as front
+  }
+  node "Railway / Render" {
+    node "Container: api" {
+      artifact "mecaflow-api.jar\n(Spring Boot / JRE 21)" as api
+    }
+    node "Container: db" {
+      database "PostgreSQL 16" as pg
+    }
+  }
+}
+
+browser --> front : HTTPS
+front --> api : HTTPS  /api
+api --> pg : JDBC (porta 5432)
+
+note bottom of api
+  Variáveis de ambiente injetadas pelo provedor:
+  SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME,
+  SPRING_DATASOURCE_PASSWORD, JWT_SECRET.
+end note
+
+@enduml

@@ -1,0 +1,216 @@
+@startuml classes
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+hide empty members
+title MecaFlow — Diagrama de Classes (Modelo de Domínio)
+
+' ======================= ENUMS =======================
+enum Perfil {
+  ADMIN
+  ATENDENTE
+  MECANICO
+}
+
+enum StatusAgendamento {
+  AGENDADO
+  CONFIRMADO
+  CANCELADO
+  REALIZADO
+}
+
+enum StatusOrcamento {
+  PENDENTE
+  APROVADO
+  REJEITADO
+  EXPIRADO
+}
+
+enum StatusOrdemServico {
+  ABERTA
+  EM_ANDAMENTO
+  AGUARDANDO_PECA
+  AGUARDANDO_APROVACAO
+  CONCLUIDA
+  ENTREGUE
+  CANCELADA
+}
+
+enum TipoItem {
+  SERVICO
+  PECA
+}
+
+enum FormaPagamento {
+  DINHEIRO
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  PIX
+  BOLETO
+}
+
+enum StatusPagamento {
+  PENDENTE
+  PAGO
+  ESTORNADO
+}
+
+' ===================== ENTIDADES =====================
+class Usuario {
+  - id: Long
+  - nome: String
+  - email: String
+  - senhaHash: String
+  - perfil: Perfil
+  - ativo: boolean
+  - criadoEm: LocalDateTime
+}
+
+class Cliente {
+  - id: Long
+  - nome: String
+  - cpfCnpj: String
+  - telefone: String
+  - email: String
+  - endereco: String
+  - criadoEm: LocalDateTime
+}
+
+class Veiculo {
+  - id: Long
+  - placa: String
+  - marca: String
+  - modelo: String
+  - anoFabricacao: int
+  - anoModelo: int
+  - cor: String
+  - chassi: String
+  - quilometragem: int
+}
+
+class Mecanico {
+  - id: Long
+  - nome: String
+  - especialidade: String
+  - registroTecnico: String
+  - ativo: boolean
+}
+
+class Servico {
+  - id: Long
+  - nome: String
+  - descricao: String
+  - precoMaoDeObra: BigDecimal
+  - tempoEstimadoHoras: BigDecimal
+  - ativo: boolean
+}
+
+class Fornecedor {
+  - id: Long
+  - nome: String
+  - cnpj: String
+  - telefone: String
+  - email: String
+}
+
+class Peca {
+  - id: Long
+  - codigo: String
+  - nome: String
+  - descricao: String
+  - precoUnitario: BigDecimal
+  - quantidadeEstoque: int
+  - estoqueMinimo: int
+  - fabricante: String
+  + baixarEstoque(qtd: int): void
+  + estoqueDisponivel(qtd: int): boolean
+}
+
+class Agendamento {
+  - id: Long
+  - dataHora: LocalDateTime
+  - status: StatusAgendamento
+  - observacoes: String
+}
+
+class Orcamento {
+  - id: Long
+  - numero: String
+  - dataCriacao: LocalDate
+  - dataValidade: LocalDate
+  - status: StatusOrcamento
+  - valorTotal: BigDecimal
+  - observacoes: String
+  + aprovar(): void
+  + rejeitar(): void
+  + recalcularTotal(): void
+}
+
+class OrcamentoItem {
+  - id: Long
+  - tipo: TipoItem
+  - descricao: String
+  - quantidade: int
+  - valorUnitario: BigDecimal
+  - valorTotal: BigDecimal
+}
+
+class OrdemServico {
+  - id: Long
+  - numero: String
+  - dataAbertura: LocalDateTime
+  - dataPrevisaoEntrega: LocalDateTime
+  - dataConclusao: LocalDateTime
+  - status: StatusOrdemServico
+  - quilometragemEntrada: int
+  - valorTotal: BigDecimal
+  - observacoes: String
+  + adicionarItem(item: OrdemServicoItem): void
+  + concluir(): void
+  + recalcularTotal(): void
+}
+
+class OrdemServicoItem {
+  - id: Long
+  - tipo: TipoItem
+  - quantidade: int
+  - valorUnitario: BigDecimal
+  - valorTotal: BigDecimal
+}
+
+class Pagamento {
+  - id: Long
+  - valor: BigDecimal
+  - formaPagamento: FormaPagamento
+  - status: StatusPagamento
+  - parcelas: int
+  - dataPagamento: LocalDateTime
+}
+
+' =================== RELACIONAMENTOS ===================
+Mecanico "1" -- "0..1" Usuario : acessa >
+
+Cliente "1" --> "0..*" Veiculo : possui >
+Cliente "1" --> "0..*" Agendamento
+Cliente "1" --> "0..*" Orcamento
+Cliente "1" --> "0..*" OrdemServico
+
+Veiculo "1" --> "0..*" Agendamento
+Veiculo "1" --> "0..*" Orcamento
+Veiculo "1" --> "0..*" OrdemServico
+
+Fornecedor "1" --> "0..*" Peca : fornece >
+
+Orcamento "1" *-- "1..*" OrcamentoItem
+Orcamento "0..1" --> "0..1" OrdemServico : origina >
+
+OrdemServico "1" *-- "1..*" OrdemServicoItem
+OrdemServico "0..*" --> "1" Mecanico : responsável >
+OrdemServico "1" --> "0..1" Pagamento : quitada por >
+
+OrcamentoItem "0..*" ..> "0..1" Servico
+OrcamentoItem "0..*" ..> "0..1" Peca
+OrdemServicoItem "0..*" ..> "0..1" Servico
+OrdemServicoItem "0..*" ..> "0..1" Peca
+
+@enduml

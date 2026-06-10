@@ -1,0 +1,181 @@
+@startuml entidade-relacionamento
+hide circle
+skinparam linetype ortho
+skinparam shadowing false
+title MecaFlow — Modelo Entidade-Relacionamento (PostgreSQL)
+
+entity "usuario" as usuario {
+  * id : BIGSERIAL <<PK>>
+  --
+  * nome : VARCHAR(120)
+  * email : VARCHAR(120) <<UQ>>
+  * senha_hash : VARCHAR(255)
+  * perfil : VARCHAR(20)
+  * ativo : BOOLEAN
+  * criado_em : TIMESTAMP
+  mecanico_id : BIGINT <<FK>>
+}
+
+entity "mecanico" as mecanico {
+  * id : BIGSERIAL <<PK>>
+  --
+  * nome : VARCHAR(120)
+  especialidade : VARCHAR(80)
+  registro_tecnico : VARCHAR(40)
+  * ativo : BOOLEAN
+}
+
+entity "cliente" as cliente {
+  * id : BIGSERIAL <<PK>>
+  --
+  * nome : VARCHAR(120)
+  * cpf_cnpj : VARCHAR(18) <<UQ>>
+  telefone : VARCHAR(20)
+  email : VARCHAR(120)
+  endereco : VARCHAR(200)
+  * criado_em : TIMESTAMP
+}
+
+entity "veiculo" as veiculo {
+  * id : BIGSERIAL <<PK>>
+  --
+  * cliente_id : BIGINT <<FK>>
+  * placa : VARCHAR(8) <<UQ>>
+  * marca : VARCHAR(40)
+  * modelo : VARCHAR(60)
+  ano_fabricacao : INT
+  ano_modelo : INT
+  cor : VARCHAR(30)
+  chassi : VARCHAR(30)
+  quilometragem : INT
+}
+
+entity "fornecedor" as fornecedor {
+  * id : BIGSERIAL <<PK>>
+  --
+  * nome : VARCHAR(120)
+  * cnpj : VARCHAR(18) <<UQ>>
+  telefone : VARCHAR(20)
+  email : VARCHAR(120)
+}
+
+entity "peca" as peca {
+  * id : BIGSERIAL <<PK>>
+  --
+  fornecedor_id : BIGINT <<FK>>
+  * codigo : VARCHAR(40) <<UQ>>
+  * nome : VARCHAR(120)
+  descricao : VARCHAR(255)
+  * preco_unitario : NUMERIC(10,2)
+  * quantidade_estoque : INT
+  * estoque_minimo : INT
+  fabricante : VARCHAR(80)
+}
+
+entity "servico" as servico {
+  * id : BIGSERIAL <<PK>>
+  --
+  * nome : VARCHAR(120)
+  descricao : VARCHAR(255)
+  * preco_mao_de_obra : NUMERIC(10,2)
+  tempo_estimado_horas : NUMERIC(5,2)
+  * ativo : BOOLEAN
+}
+
+entity "agendamento" as agendamento {
+  * id : BIGSERIAL <<PK>>
+  --
+  * cliente_id : BIGINT <<FK>>
+  * veiculo_id : BIGINT <<FK>>
+  * data_hora : TIMESTAMP
+  * status : VARCHAR(20)
+  observacoes : VARCHAR(255)
+}
+
+entity "orcamento" as orcamento {
+  * id : BIGSERIAL <<PK>>
+  --
+  * cliente_id : BIGINT <<FK>>
+  * veiculo_id : BIGINT <<FK>>
+  * numero : VARCHAR(20) <<UQ>>
+  * data_criacao : DATE
+  data_validade : DATE
+  * status : VARCHAR(20)
+  * valor_total : NUMERIC(10,2)
+  observacoes : VARCHAR(255)
+}
+
+entity "orcamento_item" as orcamento_item {
+  * id : BIGSERIAL <<PK>>
+  --
+  * orcamento_id : BIGINT <<FK>>
+  servico_id : BIGINT <<FK>>
+  peca_id : BIGINT <<FK>>
+  * tipo : VARCHAR(10)
+  descricao : VARCHAR(160)
+  * quantidade : INT
+  * valor_unitario : NUMERIC(10,2)
+  * valor_total : NUMERIC(10,2)
+}
+
+entity "ordem_servico" as os {
+  * id : BIGSERIAL <<PK>>
+  --
+  * cliente_id : BIGINT <<FK>>
+  * veiculo_id : BIGINT <<FK>>
+  mecanico_id : BIGINT <<FK>>
+  orcamento_id : BIGINT <<FK>>
+  * numero : VARCHAR(20) <<UQ>>
+  * data_abertura : TIMESTAMP
+  data_previsao_entrega : TIMESTAMP
+  data_conclusao : TIMESTAMP
+  * status : VARCHAR(25)
+  quilometragem_entrada : INT
+  * valor_total : NUMERIC(10,2)
+  observacoes : VARCHAR(255)
+}
+
+entity "ordem_servico_item" as os_item {
+  * id : BIGSERIAL <<PK>>
+  --
+  * ordem_servico_id : BIGINT <<FK>>
+  servico_id : BIGINT <<FK>>
+  peca_id : BIGINT <<FK>>
+  * tipo : VARCHAR(10)
+  * quantidade : INT
+  * valor_unitario : NUMERIC(10,2)
+  * valor_total : NUMERIC(10,2)
+}
+
+entity "pagamento" as pagamento {
+  * id : BIGSERIAL <<PK>>
+  --
+  * ordem_servico_id : BIGINT <<FK>> <<UQ>>
+  * valor : NUMERIC(10,2)
+  * forma_pagamento : VARCHAR(20)
+  * status : VARCHAR(15)
+  parcelas : INT
+  data_pagamento : TIMESTAMP
+}
+
+' =================== RELACIONAMENTOS ===================
+mecanico ||--o| usuario
+cliente  ||--o{ veiculo
+cliente  ||--o{ agendamento
+cliente  ||--o{ orcamento
+cliente  ||--o{ os
+veiculo  ||--o{ agendamento
+veiculo  ||--o{ orcamento
+veiculo  ||--o{ os
+fornecedor ||--o{ peca
+mecanico ||--o{ os
+orcamento ||--|{ orcamento_item
+orcamento |o--o| os
+os ||--|{ os_item
+os ||--o| pagamento
+servico ||--o{ orcamento_item
+peca    ||--o{ orcamento_item
+servico ||--o{ os_item
+peca    ||--o{ os_item
+
+@enduml

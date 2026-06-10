@@ -1,0 +1,58 @@
+@startuml sequencia-abertura-os
+title MecaFlow — Abertura de Ordem de Serviço e Baixa de Estoque
+skinparam shadowing false
+autonumber
+
+actor Atendente
+participant "React SPA" as UI
+participant "OrdemServicoController" as Ctrl
+participant "OrdemServicoService" as Svc
+participant "EstoqueService" as Estoque
+participant "OrcamentoRepository" as OrcRepo
+participant "PecaRepository" as PecaRepo
+participant "OrdemServicoRepository" as OsRepo
+database "PostgreSQL" as DB
+
+Atendente -> UI : Seleciona orçamento aprovado e\nsolicita a abertura da OS
+UI -> Ctrl : POST /api/ordens-servico { orcamentoId, mecanicoId }
+activate Ctrl
+Ctrl -> Svc : abrir(dto)
+activate Svc
+
+Svc -> OrcRepo : findById(orcamentoId)
+OrcRepo -> DB : SELECT
+DB --> OrcRepo
+OrcRepo --> Svc : Orcamento
+
+alt Orçamento não está APROVADO
+  Svc --> Ctrl : RegraNegocioException
+  Ctrl --> UI : 422 Unprocessable Entity
+else Orçamento APROVADO
+  Svc -> Svc : montarItens(orcamento)
+  loop para cada item do tipo PECA
+    Svc -> Estoque : reservar(pecaId, quantidade)
+    activate Estoque
+    Estoque -> PecaRepo : findById(pecaId)
+    PecaRepo --> Estoque : Peca
+    alt Estoque insuficiente
+      Estoque --> Svc : EstoqueInsuficienteException
+      Svc --> Ctrl : 409 Conflict
+    else Estoque suficiente
+      Estoque -> Estoque : peca.baixarEstoque(qtd)
+      Estoque -> PecaRepo : save(peca)
+      PecaRepo -> DB : UPDATE peca SET quantidade_estoque = ?
+    end
+    deactivate Estoque
+  end
+  Svc -> OsRepo : save(novaOS [status = ABERTA])
+  OsRepo -> DB : INSERT ordem_servico + ordem_servico_item
+  DB --> OsRepo
+  OsRepo --> Svc : OrdemServico
+  Svc --> Ctrl : OrdemServicoResponse
+  Ctrl --> UI : 201 Created
+end
+deactivate Svc
+deactivate Ctrl
+UI --> Atendente : Exibe a OS criada com o número gerado
+
+@enduml

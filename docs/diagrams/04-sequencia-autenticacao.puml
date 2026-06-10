@@ -1,0 +1,49 @@
+@startuml sequencia-autenticacao
+title MecaFlow — Sequência de Autenticação (JWT)
+skinparam shadowing false
+autonumber
+
+actor Usuario
+participant "React SPA" as UI
+participant "AuthController" as Ctrl
+participant "AuthService" as Svc
+participant "AuthenticationManager" as AuthMgr
+participant "UsuarioRepository" as Repo
+participant "JwtService" as Jwt
+database "PostgreSQL" as DB
+
+Usuario -> UI : Informa e-mail e senha
+UI -> Ctrl : POST /api/auth/login { email, senha }
+activate Ctrl
+Ctrl -> Svc : autenticar(credenciais)
+activate Svc
+Svc -> AuthMgr : authenticate(email, senha)
+AuthMgr -> Repo : findByEmail(email)
+Repo -> DB : SELECT * FROM usuario WHERE email = ?
+DB --> Repo
+Repo --> AuthMgr : Usuario
+
+alt Credenciais inválidas
+  AuthMgr --> Svc : BadCredentialsException
+  Svc --> Ctrl : 401 Unauthorized
+  Ctrl --> UI : 401 + mensagem de erro
+else Credenciais válidas
+  AuthMgr --> Svc : Authentication (ok)
+  Svc -> Jwt : gerarToken(usuario)
+  Jwt --> Svc : accessToken (JWT)
+  Svc --> Ctrl : TokenResponse { accessToken, perfil }
+  Ctrl --> UI : 200 OK + token
+  UI -> UI : Armazena token e redireciona
+end
+deactivate Svc
+deactivate Ctrl
+
+== Requisições autenticadas ==
+UI -> Ctrl : GET /api/ordens-servico\nAuthorization: Bearer <token>
+note right
+  O JwtAuthenticationFilter intercepta a requisição,
+  valida a assinatura e expiração do token e popula
+  o SecurityContext antes de chegar ao Controller.
+end note
+
+@enduml

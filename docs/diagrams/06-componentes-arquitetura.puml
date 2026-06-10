@@ -1,0 +1,42 @@
+@startuml componentes-arquitetura
+title MecaFlow — Arquitetura em Camadas (Spring Boot + React)
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+actor "Usuário" as user
+
+node "Navegador" {
+  [React SPA (Vite + TypeScript)] as spa
+}
+
+node "Servidor de Aplicação" {
+  package "API REST — Spring Boot" {
+    [Security / JwtAuthenticationFilter] as sec
+    [Controllers (REST)] as ctrl
+    [DTOs / Mappers] as dto
+    [Services (Regras de Negócio)] as svc
+    [Repositories (Spring Data JPA)] as repo
+    [Exception Handler Global] as exc
+  }
+}
+
+database "PostgreSQL 16" as db
+component "Flyway (Migrations)" as fly
+
+user --> spa
+spa --> sec : HTTPS / JSON
+sec --> ctrl
+ctrl --> dto
+ctrl --> svc
+svc --> repo
+repo --> db : JDBC
+exc ..> ctrl : trata exceções
+fly ..> db : versiona o schema
+
+note right of svc
+  Camada de domínio: validações,
+  transações (@Transactional) e
+  orquestração entre repositórios.
+end note
+
+@enduml
