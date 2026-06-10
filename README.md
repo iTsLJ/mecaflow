@@ -61,12 +61,9 @@
   - [Como Gerar os Diagramas (PlantUML)](#-como-gerar-os-diagramas-plantuml)
 - [Deploy](#-deploy)
 - [Estrutura de Pastas](#-estrutura-de-pastas)
-- [Demonstração](#-demonstração)
 - [Testes](#-testes)
 - [Documentações utilizadas](#-documentações-utilizadas)
 - [Autores](#-autores)
-- [Contribuição](#-contribuição)
-- [Agradecimentos](#-agradecimentos)
 - [Licença](#-licença)
 
 ---
@@ -559,7 +556,7 @@ npm run test
 
 ## 👥 Autores
 
-| 👤 Nome | :octocat: GitHub | 💼 LinkedIn |
+| 👤 Nome | :octocat: GitHub | 💼 LinkedIn 
 |---------|-----------------|-------------|-----------|
 | Lucas José Lopes Ferreira | [GitHub](https://github.com/iTsLJ) | [LinkedIn](www.linkedin.com/in/lucas-ferreira10) 
 
