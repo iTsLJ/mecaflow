@@ -1,0 +1,27 @@
+@startuml
+title Diagrama de Estados — Ordem de Serviço
+skinparam shadowing false
+
+[*] --> ABERTA : abrirOrdemServico()\n[orçamento APROVADO]
+
+ABERTA --> EM_ANDAMENTO : mecânico inicia o reparo
+EM_ANDAMENTO --> AGUARDANDO_PECA : peça indisponível
+AGUARDANDO_PECA --> EM_ANDAMENTO : peça reposta no estoque
+EM_ANDAMENTO --> AGUARDANDO_APROVACAO : serviço adicional identificado
+AGUARDANDO_APROVACAO --> EM_ANDAMENTO : cliente aprova o adicional\n[atendente registra]
+EM_ANDAMENTO --> CONCLUIDA : concluir()\n[serviços e peças lançados]
+CONCLUIDA --> ENTREGUE : registrarPagamento()\n/ pagamento com status PAGO
+
+ABERTA --> CANCELADA : cancelar()
+EM_ANDAMENTO --> CANCELADA : cancelar()
+AGUARDANDO_PECA --> CANCELADA : cancelar()
+AGUARDANDO_APROVACAO --> CANCELADA : cancelar()\n/ estorna peças ao estoque
+
+ENTREGUE --> [*]
+CANCELADA --> [*]
+
+note right of CONCLUIDA
+  Ao concluir, o sistema recalcula
+  o valor total da OS (UC-19).
+end note
+@enduml

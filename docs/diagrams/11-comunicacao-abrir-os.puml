@@ -1,0 +1,21 @@
+@startuml
+title Diagrama de Comunicação — Realização de UC-11 (Abrir Ordem de Serviço)
+skinparam shadowing false
+
+object "Atendente" as A <<ator>>
+object ":OrdemServicoController" as ctrl
+object ":OrdemServicoService" as svc
+object ":OrdemServicoRepository" as osRepo
+object ":OrcamentoRepository" as orcRepo
+object ":EstoqueService" as est
+object ":PecaRepository" as pecaRepo
+
+A -right-> ctrl : 1: POST /api/ordens-servico\n(orcamentoId, mecanicoId)
+ctrl -right-> svc : 2: abrir(dto)
+svc -right-> osRepo : 6: save(novaOS [ABERTA])
+svc -down-> orcRepo : 3: findById(orcamentoId)\n4: validarAprovado(orcamento)
+svc -down-> est : 5: reservar(pecaId, qtd)\n[para cada item de peça]
+est -right-> pecaRepo : 5.1: findById(pecaId)\n5.3: save(peca)
+est -> est : 5.2: peca.baixarEstoque(qtd)
+ctrl ..> A : 7: 201 Created (OrdemServicoResponse)
+@enduml

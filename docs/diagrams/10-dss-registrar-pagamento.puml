@@ -1,0 +1,19 @@
+@startuml
+title DSS-03 — Diagrama de Sequência do Sistema: Registrar Pagamento (UC-16)
+skinparam shadowing false
+autonumber
+
+actor Atendente
+participant ":Sistema MecaFlow" as S
+
+Atendente -> S : consultarOrdemServico(numeroOS)
+S --> Atendente : dados da OS e valor total
+
+Atendente -> S : registrarPagamento(ordemServicoId,\nformaPagamento, parcelas)
+
+alt OS não está CONCLUIDA
+  S --> Atendente : recusa: a OS ainda não foi concluída
+else fluxo principal
+  S --> Atendente : pagamento confirmado (status PAGO)\ne OS marcada como ENTREGUE
+end
+@enduml

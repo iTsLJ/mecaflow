@@ -1,0 +1,25 @@
+@startuml
+title DSS-01 — Diagrama de Sequência do Sistema: Emitir Orçamento (UC-09)
+skinparam shadowing false
+autonumber
+
+actor Atendente
+participant ":Sistema MecaFlow" as S
+
+Atendente -> S : iniciarOrcamento(clienteId, veiculoId)
+S --> Atendente : orçamento em elaboração
+
+loop para cada serviço ou peça solicitada
+  Atendente -> S : adicionarItem(tipo, itemId, quantidade)
+  S --> Atendente : item incluído e total parcial atualizado
+end
+
+Atendente -> S : finalizarOrcamento(dataValidade)
+S --> Atendente : número do orçamento, valor total,\nstatus PENDENTE
+
+note right of S
+  O sistema é tratado como caixa-preta.
+  A operação finalizarOrcamento dispara
+  o cálculo do total (UC-19).
+end note
+@enduml

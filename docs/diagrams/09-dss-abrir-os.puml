@@ -1,0 +1,24 @@
+@startuml
+title DSS-02 — Diagrama de Sequência do Sistema: Abrir Ordem de Serviço (UC-11)
+skinparam shadowing false
+autonumber
+
+actor Atendente
+participant ":Sistema MecaFlow" as S
+
+Atendente -> S : abrirOrdemServico(orcamentoId, mecanicoId)
+
+alt orçamento não está APROVADO
+  S --> Atendente : recusa: regra de negócio violada
+else estoque insuficiente para algum item de peça
+  S --> Atendente : recusa: estoque insuficiente
+else fluxo principal
+  S --> Atendente : OS criada (número, status ABERTA,\nprevisão de entrega)
+end
+
+note right of S
+  No fluxo principal o sistema copia os itens
+  do orçamento e debita o estoque das peças
+  (UC-20).
+end note
+@enduml

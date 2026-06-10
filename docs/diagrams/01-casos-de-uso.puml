@@ -1,4 +1,4 @@
-@startuml casos-de-uso
+@startuml
 left to right direction
 skinparam packageStyle rectangle
 skinparam shadowing false
@@ -10,65 +10,65 @@ actor "Atendente" as Atendente
 actor "Mecânico" as Mecanico
 
 rectangle "MecaFlow" {
-  usecase "Autenticar no sistema" as UC0
-  usecase "Gerenciar usuários" as UC1
-  usecase "Gerenciar catálogo de serviços" as UC2
-  usecase "Gerenciar fornecedores" as UC3
-  usecase "Gerenciar peças e estoque" as UC4
-  usecase "Gerenciar clientes" as UC5
-  usecase "Gerenciar veículos" as UC6
-  usecase "Agendar serviço" as UC7
-  usecase "Emitir orçamento" as UC8
-  usecase "Registrar decisão do orçamento" as UC9
-  usecase "Abrir ordem de serviço" as UC10
-  usecase "Atribuir mecânico" as UC11
-  usecase "Atualizar status da OS" as UC12
-  usecase "Lançar serviços e peças na OS" as UC13
-  usecase "Concluir ordem de serviço" as UC14
-  usecase "Registrar pagamento" as UC15
-  usecase "Consultar histórico do veículo" as UC16
-  usecase "Emitir relatórios gerenciais" as UC17
-  usecase "Calcular valor total" as UC18
-  usecase "Dar baixa no estoque" as UC19
-  usecase "Gerar alerta de\nestoque mínimo" as UC20
-  usecase "Aplicar desconto" as UC21
+  usecase "UC-01\nAutenticar no sistema" as UC01
+  usecase "UC-02\nGerenciar usuários" as UC02
+  usecase "UC-03\nGerenciar catálogo de serviços" as UC03
+  usecase "UC-04\nGerenciar fornecedores" as UC04
+  usecase "UC-05\nGerenciar peças e estoque" as UC05
+  usecase "UC-06\nGerenciar clientes" as UC06
+  usecase "UC-07\nGerenciar veículos" as UC07
+  usecase "UC-08\nAgendar serviço" as UC08
+  usecase "UC-09\nEmitir orçamento" as UC09
+  usecase "UC-10\nRegistrar decisão do orçamento" as UC10
+  usecase "UC-11\nAbrir ordem de serviço" as UC11
+  usecase "UC-12\nAtribuir mecânico" as UC12
+  usecase "UC-13\nAtualizar status da OS" as UC13
+  usecase "UC-14\nLançar serviços e peças na OS" as UC14
+  usecase "UC-15\nConcluir ordem de serviço" as UC15
+  usecase "UC-16\nRegistrar pagamento" as UC16
+  usecase "UC-17\nConsultar histórico do veículo" as UC17
+  usecase "UC-18\nEmitir relatórios gerenciais" as UC18
+  usecase "UC-19\nCalcular valor total" as UC19
+  usecase "UC-20\nDar baixa no estoque" as UC20
+  usecase "UC-21\nGerar alerta de\nestoque mínimo" as UC21
+  usecase "UC-22\nAplicar desconto" as UC22
 }
 
-Admin --> UC0
-Atendente --> UC0
-Mecanico --> UC0
+Admin --> UC01
+Atendente --> UC01
+Mecanico --> UC01
 
-Admin --> UC1
-Admin --> UC2
-Admin --> UC3
-Admin --> UC17
+Admin --> UC02
+Admin --> UC03
+Admin --> UC04
+Admin --> UC18
 
-Atendente --> UC4
-Atendente --> UC5
-Atendente --> UC6
-Atendente --> UC7
-Atendente --> UC8
-Atendente --> UC9
+Atendente --> UC05
+Atendente --> UC06
+Atendente --> UC07
+Atendente --> UC08
+Atendente --> UC09
 Atendente --> UC10
 Atendente --> UC11
-Atendente --> UC15
+Atendente --> UC12
 Atendente --> UC16
+Atendente --> UC17
 
-Mecanico --> UC12
 Mecanico --> UC13
 Mecanico --> UC14
-Mecanico --> UC16
+Mecanico --> UC15
+Mecanico --> UC17
 
 ' ---------- INCLUDE: comportamento obrigatório e reutilizado ----------
-UC8  .> UC18 : <<include>>
-UC14 .> UC18 : <<include>>
+UC09 .> UC19 : <<include>>
+UC15 .> UC19 : <<include>>
 
 ' ---------- EXTEND: comportamento condicional (aponta para o caso base) ----------
-UC19 .> UC13 : <<extend>>
-UC20 .> UC19 : <<extend>>
-UC21 .> UC15 : <<extend>>
+UC20 .> UC14 : <<extend>>
+UC21 .> UC20 : <<extend>>
+UC22 .> UC16 : <<extend>>
 
-note bottom of UC10
+note bottom of UC11
   Pré-condição: existir orçamento com
   status APROVADO para o veículo.
   (pré-condição não é <<include>>)
@@ -76,9 +76,9 @@ end note
 
 legend right
   |= Relação <<extend>> |= Condição de execução |
-  | Dar baixa no estoque -> Lançar serviços e peças na OS | item lançado é do tipo PEÇA |
-  | Gerar alerta de estoque mínimo -> Dar baixa no estoque | saldo fica abaixo do estoque mínimo |
-  | Aplicar desconto -> Registrar pagamento | atendente concede desconto |
+  | UC-20 -> UC-14 | item lançado é do tipo PEÇA |
+  | UC-21 -> UC-20 | saldo fica abaixo do estoque mínimo |
+  | UC-22 -> UC-16 | atendente concede desconto |
 endlegend
 
 @enduml

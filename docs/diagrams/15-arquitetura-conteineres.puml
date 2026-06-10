@@ -1,0 +1,16 @@
+@startuml
+title MecaFlow — Visão de Arquitetura (nível de contêineres, estilo C4)
+skinparam shadowing false
+skinparam rectangleBorderColor #2E75B6
+skinparam databaseBorderColor #2E75B6
+
+actor "Funcionário da oficina\n(Administrador, Atendente ou Mecânico)" as user
+
+rectangle "SPA Web\n[React 19, Vite, TypeScript]\nInterface de uso no navegador" as spa
+rectangle "API REST\n[Spring Boot 3.3, Java 21]\nCamadas: Security (JWT), Controller,\nService, Repository" as api
+database "Banco de Dados\n[PostgreSQL 16]\nSchema versionado pelo Flyway" as db
+
+user --> spa : usa\n[HTTPS]
+spa --> api : requisições JSON\n[HTTPS]
+api --> db : leitura e escrita\n[JDBC]
+@enduml

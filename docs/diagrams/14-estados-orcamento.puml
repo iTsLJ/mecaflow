@@ -1,0 +1,19 @@
+@startuml
+title Diagrama de Estados — Orçamento
+skinparam shadowing false
+
+[*] --> PENDENTE : finalizarOrcamento()
+
+PENDENTE --> APROVADO : registrarDecisao(APROVAR)\n[dentro da validade]
+PENDENTE --> REJEITADO : registrarDecisao(REJEITAR)
+PENDENTE --> EXPIRADO : dataValidade vencida\n[verificação diária do sistema]
+
+APROVADO --> [*] : origina ordem de serviço (UC-11)
+REJEITADO --> [*]
+EXPIRADO --> [*]
+
+note right of APROVADO
+  Um orçamento APROVADO origina
+  no máximo uma ordem de serviço.
+end note
+@enduml
